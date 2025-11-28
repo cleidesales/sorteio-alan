@@ -11,6 +11,7 @@ import IniciarTela from '@/components/programacao/IniciarTela';
 
 export default function HomeScreen() {
   return (
+<<<<<<< HEAD
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
       headerImage={
@@ -34,6 +35,9 @@ export default function HomeScreen() {
         </TouchableOpacity>
       </Link>
     </ParallaxScrollView>
+=======
+     <IniciarTela/>
+>>>>>>> c6bce476733a05ce691aae7ded24d282a354ba68
   );
 }
 
