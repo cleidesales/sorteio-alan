@@ -1,6 +1,7 @@
 import { Image } from 'expo-image';
 import { StyleSheet } from 'react-native';
-
+import { Link } from 'expo-router';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { HelloWave } from '@/components/hello-wave';
 import ParallaxScrollView from '@/components/parallax-scroll-view';
 import Button from '@/components/shared/Button';
@@ -20,11 +21,18 @@ export default function HomeScreen() {
       }>
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Bem-vindo ao Connect!</ThemedText>
-        <HelloWave />
+        <HelloWave /> 
       </ThemedView>
       <Button title='connect IF' onPress={()=> console.log('hello')} key={12}/>
        <ThemedText>This app includes example code to help you get started.</ThemedText>
        {/* descomente aqui para ver a tela de login <IniciarTela/>*/}
+      <Link href="/sorteio" asChild>
+        <TouchableOpacity style={{ marginTop: 24, padding: 12, backgroundColor: '#2563EB', borderRadius: 8 }}>
+          <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>
+            Ir para os filtros !
+          </Text>
+        </TouchableOpacity>
+      </Link>
     </ParallaxScrollView>
   );
 }
