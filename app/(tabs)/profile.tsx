@@ -2,9 +2,9 @@ import { useAuth } from '@/services/auth/context';
 import { apiProgramacao, Atividade } from '@/services/programacao/api';
 import PresencaCard from '@/components/presenca/PresencaCard';
 import { authStorage } from '@/services/programacao/authStorage';
-import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { useCallback, useState } from 'react';
+import { ActivityIndicator, Alert, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function Profile() {
   const router = useRouter();
@@ -12,13 +12,7 @@ export default function Profile() {
   const [palestras, setPalestras] = useState<(Atividade & { dataHoraPresenca?: string; sincronizado?: boolean })[]>([]);
   const [carregandoPresencas, setCarregandoPresencas] = useState(false);
 
-  useEffect(() => {
-    if (usuario?.id) {
-      carregarPalestras();
-    }
-  }, [usuario?.id]);
-
-  const carregarPalestras = async () => {
+  const carregarPalestras = useCallback(async () => {
     if (!usuario?.id) return;
     
     setCarregandoPresencas(true);
@@ -31,7 +25,17 @@ export default function Profile() {
     } finally {
       setCarregandoPresencas(false);
     }
-  };
+  }, [usuario?.id]);
+
+  // Recarregar presenças sempre que a tela receber foco
+  useFocusEffect(
+    useCallback(() => {
+      if (usuario?.id) {
+        carregarPalestras();
+      }
+    }, [usuario?.id, carregarPalestras])
+  );
+
 
   const handleLogout = () => {
     Alert.alert('Logout', 'Tem certeza que deseja sair?', [
@@ -52,6 +56,13 @@ export default function Profile() {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={carregandoPresencas}
+            onRefresh={carregarPalestras}
+            colors={['#1e88e5']}
+          />
+        }
       >
         <View style={styles.card}>
           <Text style={styles.titulo}>Informações do Perfil</Text>
